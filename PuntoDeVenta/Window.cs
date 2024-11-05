@@ -9,13 +9,47 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using TextBox = System.Windows.Forms.TextBox;
 
 namespace PuntoDeVenta
 {
     public partial class Window : Form
     {
+
         SqlCommand comando = new SqlCommand();
         SqlDataAdapter adapter = new SqlDataAdapter();
+
+        private void button1_Click(object sender, EventArgs e) //prueba de conexion
+        {
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
+
+            conn.Open();
+            MessageBox.Show("Base de Datos conectada");
+
+            button1.Visible = false;
+
+            BProductos.Visible = true;
+            bClientes.Visible = true;
+            bVentas.Visible = true;
+            tbx8.Visible = true;
+            bBuscar.Visible = true;
+            bRegistrar.Visible = true;
+            bMostrar.Visible = true;
+            bBorrar.Visible = true;
+            bEditar.Visible = true;
+            GridView1.Visible = true;
+
+
+
+
+
+
+
+
+        }
+
 
         private string seccionActiva = "";
 
@@ -111,7 +145,6 @@ namespace PuntoDeVenta
 
         }
 
-
         private void button3_Click(object sender, EventArgs e) //menu ventas
         {
             seccionActiva = "Ventas";
@@ -172,37 +205,24 @@ namespace PuntoDeVenta
    
         private void bBorrar_Click(object sender, EventArgs e) //boton para borrar dato
         {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e) //prueba de conexion
-        {
-            SqlConnection conn = new SqlConnection();
-            conn.ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
-
-            conn.Open();
-            MessageBox.Show("Base de Datos conectada");
-
-            button1.Visible = false;
-            
-            BProductos.Visible = true;
-            bClientes.Visible = true;
-            bVentas.Visible = true;
-            tbx8.Visible = true;
-            bBuscar.Visible = true;
-            bRegistrar.Visible = true;
-            bMostrar.Visible = true;
-            bBorrar.Visible = true;
-
-            GridView1.Visible = true;
+            if (seccionActiva == "Clientes")
+            {
+                EliminarCliente();
+            }
+            else if (seccionActiva == "Productos")
+            {
+                EliminarProducto();
+            }
+            else if (seccionActiva == "Ventas")
+            {
+                EliminarVenta();
+            }
+            else
+            {
+                MessageBox.Show("Por favor, selecciona una sección válida antes de registrar.");
+            }
 
 
-
-
-
-
-
-            
         }
 
         private void bMostrar_Click(object sender, EventArgs e) // Boton para Mostrar Tabla datos
@@ -244,6 +264,28 @@ namespace PuntoDeVenta
                 MessageBox.Show("Por favor, selecciona una sección válida antes de Buscar.");
             }
         }
+
+        private void bEditar_Click(object sender, EventArgs e) //boton para editar clientes
+        {
+            if (seccionActiva == "Clientes")
+            {
+                EditarCliente();
+            }
+            else if (seccionActiva == "Productos")
+            {
+                EditarProducto();
+            }
+            else if (seccionActiva == "Ventas")
+            {
+                EditarVenta();
+            }
+            else
+            {
+                MessageBox.Show("Por favor, selecciona una sección válida antes de Buscar.");
+            }
+        }
+
+        
 
         //funciones para registrar
         private void RegistrarCliente() //registrar cliente
@@ -351,6 +393,7 @@ namespace PuntoDeVenta
         private void BuscarCliente()  //buscar cliente
         {
             Vacio();
+            
 
             try
             {
@@ -364,6 +407,9 @@ namespace PuntoDeVenta
                     {
                         if (reader.Read())
                         {
+                            bEditar.Enabled = true;
+                            bBorrar.Enabled = true;
+
                             // Si se encuentra el cliente, llenar los TextBox
                             tbx2.Text = reader["RFC"].ToString();
                             tbx1.Text = reader["Nombre"].ToString();
@@ -476,8 +522,126 @@ namespace PuntoDeVenta
             }
 
         }
-        
-        //funciones 
+
+        //funciones para eliminar
+
+        private void EliminarCliente()
+        {
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar este cliente?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            // Si el usuario selecciona "Sí", se procede con la eliminación
+            if (resultado == DialogResult.Yes)
+            {
+                try
+                {
+                    using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
+                    {
+                        conn.Open();
+                        SqlCommand comando = new SqlCommand("DELETE FROM Clientes WHERE IdCliente = @IdCliente", conn);
+                        comando.Parameters.AddWithValue("@IdCliente", tbx8.Text);  // El ID que quieres eliminar
+
+                        int filasAfectadas = comando.ExecuteNonQuery();
+
+                        if (filasAfectadas > 0)
+                        {
+                            MessageBox.Show("Cliente eliminado correctamente.");
+                            LimpiarCampos(new TextBox[] { tbx1, tbx2, tbx3, tbx4, tbx5, tbx6, tbx7, tbx8 });
+
+                            bEditar.Enabled = false;
+                            bBorrar.Enabled = false;
+                        }
+                        else
+                        {
+                            MessageBox.Show("No se pudo eliminar el cliente.");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al eliminar el cliente: " + ex.Message);
+                }
+            }
+            else
+            {
+                // Si el usuario selecciona "No", no se realiza ninguna acción
+                MessageBox.Show("Eliminación cancelada.");
+            }
+
+        }
+
+        private void EliminarVenta()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void EliminarProducto()
+        {
+            throw new NotImplementedException();
+        }
+        // funciones editar
+
+        private void EditarCliente()
+        {
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas editar este cliente?", "Confirmar edición", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            // Si el usuario selecciona "Sí", se procede con la edición
+            if (resultado == DialogResult.Yes)
+            {
+                try
+                {
+                    using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
+                    {
+                        conn.Open();
+                        SqlCommand comando = new SqlCommand("UPDATE Clientes SET RFC = @RFC, Nombre = @Nombre, Dirección = @Dirección, Teléfono = @Teléfono, No_Cuenta = @No_Cuenta WHERE IdCliente = @IdCliente", conn);
+
+                        // Asignar los valores de los TextBox a los parámetros de la consulta SQL
+                        comando.Parameters.AddWithValue("@RFC", tbx2.Text);
+                        comando.Parameters.AddWithValue("@Nombre", tbx1.Text);
+                        comando.Parameters.AddWithValue("@Dirección", tbx3.Text);
+                        comando.Parameters.AddWithValue("@Teléfono", tbx4.Text);
+                        comando.Parameters.AddWithValue("@No_Cuenta", tbx5.Text);
+                        comando.Parameters.AddWithValue("@IdCliente", tbx8.Text);  // IdCliente que se utiliza para buscar
+
+                        int filasAfectadas = comando.ExecuteNonQuery();
+
+                        if (filasAfectadas > 0)
+                        {
+                            MessageBox.Show("Cliente actualizado correctamente.");
+                            LimpiarCampos(new TextBox[] { tbx1, tbx2, tbx3, tbx4, tbx5, tbx6, tbx7, tbx8 });
+
+                            bEditar.Enabled = false;
+                            bBorrar.Enabled = false;
+                        }
+                        else
+                        {
+                            MessageBox.Show("No se pudo actualizar el cliente.");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al actualizar el cliente: " + ex.Message);
+                }
+            }
+            else
+            {
+                // Si el usuario selecciona "No", no se realiza ninguna acción
+                MessageBox.Show("Edición cancelada.");
+            }
+        }
+
+        private void EditarVenta()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void EditarProducto()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        //funciones
 
         private void LimpiarCampos(TextBox[] textboxes) //funcion para limpiar textbox
         {
@@ -651,5 +815,7 @@ namespace PuntoDeVenta
         {
 
         }
+
+        
     }
 }

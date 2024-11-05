@@ -56,6 +56,7 @@
             this.tbx7 = new System.Windows.Forms.TextBox();
             this.lb7 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.bEditar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.GridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -110,7 +111,8 @@
             // bBorrar
             // 
             this.bBorrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(131)))), ((int)(((byte)(213)))), ((int)(((byte)(208)))));
-            this.bBorrar.Location = new System.Drawing.Point(732, 444);
+            this.bBorrar.Enabled = false;
+            this.bBorrar.Location = new System.Drawing.Point(715, 444);
             this.bBorrar.Name = "bBorrar";
             this.bBorrar.Size = new System.Drawing.Size(75, 23);
             this.bBorrar.TabIndex = 3;
@@ -363,12 +365,25 @@
             this.label3.Visible = false;
             this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
+            // bEditar
+            // 
+            this.bEditar.Enabled = false;
+            this.bEditar.Location = new System.Drawing.Point(617, 444);
+            this.bEditar.Name = "bEditar";
+            this.bEditar.Size = new System.Drawing.Size(75, 23);
+            this.bEditar.TabIndex = 34;
+            this.bEditar.Text = "Editar";
+            this.bEditar.UseVisualStyleBackColor = true;
+            this.bEditar.Visible = false;
+            this.bEditar.Click += new System.EventHandler(this.bEditar_Click);
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(241)))), ((int)(((byte)(193)))));
             this.ClientSize = new System.Drawing.Size(849, 492);
+            this.Controls.Add(this.bEditar);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.tbx7);
             this.Controls.Add(this.lb7);
@@ -436,6 +451,7 @@
         private System.Windows.Forms.TextBox tbx7;
         private System.Windows.Forms.Label lb7;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button bEditar;
     }
 }
 
