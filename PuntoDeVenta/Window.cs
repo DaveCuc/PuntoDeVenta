@@ -144,6 +144,9 @@ namespace PuntoDeVenta
         {
             seccionActiva = "Ventas";
 
+            CampoBusqueda();
+
+
             label2.Visible = true;
             label2.Text = "Ventas";
 
@@ -156,8 +159,8 @@ namespace PuntoDeVenta
             lb7.Visible = false;
             lb8.Visible = true;
 
-            lb1.Text = "Id. Producto";
-            lb2.Text = "Id. Cliente";
+            lb1.Text = "Nombre del Producto";
+            lb2.Text = "Nombre del Cliente";
             lb3.Text = "Fecha de la venta";
             lb4.Text = "Cantidad";
             lb5.Text = "Total";
@@ -176,6 +179,11 @@ namespace PuntoDeVenta
 
 
             GridView1.DataSource = null;
+        }
+
+        private void CampoBusqueda()
+        {
+            
         }
 
         private void button4_Click(object sender, EventArgs e) // Botón para registrar
@@ -331,6 +339,55 @@ namespace PuntoDeVenta
         }
         private void RegistrarVenta() //registrar venta
         {
+            if (
+               string.IsNullOrWhiteSpace(tbx2.Text) ||
+               string.IsNullOrWhiteSpace(tbx1.Text) ||
+               string.IsNullOrWhiteSpace(tbx3.Text) ||
+               string.IsNullOrWhiteSpace(tbx4.Text) ||
+               string.IsNullOrWhiteSpace(tbx5.Text))
+            {
+                MessageBox.Show("Por favor, complete todos los campos antes de registrar el cliente.");
+                return;
+            }
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
+                {
+                    conn.Open();
+
+                    MySqlCommand comando = new MySqlCommand("INSERT INTO Ventas (idProducto, idCliente, FechaVenta, Cantidad, Total) VALUES (@idProducto, @idCliente, @FechaVenta, @Cantidad, @Total)", conn);
+
+                    // Asignar parámetros para la consulta de venta
+                    comando.Parameters.AddWithValue("@idCliente", tbx1.Text);
+                    comando.Parameters.AddWithValue("@idProducto", tbx2.Text);
+                    comando.Parameters.AddWithValue("@FechaVenta", DateTime.Parse(tbx3.Text));
+                    comando.Parameters.AddWithValue("@Cantidad", int.Parse(tbx4.Text));
+                    comando.Parameters.AddWithValue("@Total", decimal.Parse(tbx5.Text));
+
+
+                    int rowsAffected = comando.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show("Venta guardada");
+
+
+                        LimpiarCampos(new TextBox[] { tbx1, tbx2, tbx3, tbx4, tbx5, tbx6, tbx7, tbx8 });
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("No se pudo guardar la venta");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                label3.Visible = true;
+                label3.Text = "No se pudo guardar: " + ex.Message;
+            }
+
+
         }
 
         private void RegistrarProducto() //registrar producto
@@ -449,7 +506,61 @@ namespace PuntoDeVenta
 
         private void BuscarVenta() //buscar venta
         {
-            
+            Vacio();
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
+                {
+                    conn.Open();
+                    MySqlCommand comando = new MySqlCommand("SELECT idProducto, idCliente, FechaVenta, Cantidad, Total FROM Ventas WHERE IdVenta = @IdVenta", conn);
+                    comando.Parameters.AddWithValue("@IdVenta", tbx8.Text);
+
+                    using (MySqlDataReader reader = comando.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Si se encuentra la venta, llenar los TextBox
+                            tbx2.Text = reader["idProducto"].ToString();
+                            tbx1.Text = reader["idCliente"].ToString();
+                            tbx3.Text = reader["FechaVenta"].ToString();
+                            tbx4.Text = reader["Cantidad"].ToString();
+                            tbx5.Text = reader["Total"].ToString();
+
+                            // Crear un DataTable para mostrar en el DataGridView
+                            DataTable dt = new DataTable();
+                            dt.Columns.Add("idProducto");
+                            dt.Columns.Add("idCliente");
+                            dt.Columns.Add("FechaVenta");
+                            dt.Columns.Add("Cantidad");
+                            dt.Columns.Add("Total");
+
+                            // Agregar la fila con los datos de la venta
+                            DataRow row = dt.NewRow();
+                            row["idProducto"] = reader["idProducto"];
+                            row["idCliente"] = reader["idCliente"];
+                            row["FechaVenta"] = reader["FechaVenta"];
+                            row["Cantidad"] = reader["Cantidad"];
+                            row["Total"] = reader["Total"];
+                            dt.Rows.Add(row);
+
+                            // Asignar el DataTable al DataGridView
+                            GridView1.DataSource = dt;
+                        }
+                        else
+                        {
+                            MessageBox.Show("No se encontró una venta con ese ID.");
+                            // Limpiar el DataGridView si no se encuentra la venta
+                            GridView1.DataSource = null;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar la venta: " + ex.Message);
+            }
+
         }
 
         private void BuscarProducto()  //buscar producto
@@ -566,7 +677,46 @@ namespace PuntoDeVenta
 
         private void EliminarVenta()
         {
-            throw new NotImplementedException();
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar esta venta?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            // Si el usuario selecciona "Sí", se procede con la eliminación
+            if (resultado == DialogResult.Yes)
+            {
+                try
+                {
+                    using (MySqlConnection conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
+                    {
+                        conn.Open();
+                        MySqlCommand comando = new MySqlCommand("DELETE FROM Ventas WHERE IdVenta = @IdVenta", conn);
+                        comando.Parameters.AddWithValue("@IdVenta", tbx8.Text);  // ID de la venta a eliminar
+
+                        int filasAfectadas = comando.ExecuteNonQuery();
+
+                        if (filasAfectadas > 0)
+                        {
+                            MessageBox.Show("Venta eliminada correctamente.");
+                            LimpiarCampos(new TextBox[] { tbx2, tbx1, tbx3, tbx4, tbx5});
+
+                            bEditar.Enabled = false;
+                            bBorrar.Enabled = false;
+                        }
+                        else
+                        {
+                            MessageBox.Show("No se pudo eliminar la venta.");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al eliminar la venta: " + ex.Message);
+                }
+            }
+            else
+            {
+                // Si el usuario selecciona "No", no se realiza ninguna acción
+                MessageBox.Show("Eliminación cancelada.");
+            }
+
         }
 
         private void EliminarProducto()
@@ -676,7 +826,22 @@ namespace PuntoDeVenta
         }
         private void MostrarVenta()
         {
-            throw new NotImplementedException();
+            try
+            {
+                MySqlConnection conn = new MySqlConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
+                DataSet ds = new DataSet("Ventas");
+                MySqlCommand comando = new MySqlCommand("SELECT * FROM Ventas", conn);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(comando);
+                conn.Open();
+                adapter.Fill(ds);
+                conn.Close();
+                GridView1.DataSource = ds.Tables[0];
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
         }
         private void MostrarProducto()
         {
