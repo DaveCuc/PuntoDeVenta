@@ -57,6 +57,8 @@
             this.lb7 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.bEditar = new System.Windows.Forms.Button();
+            this.ListDesplegable1 = new System.Windows.Forms.ComboBox();
+            this.ListDesplegable2 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.GridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -135,11 +137,11 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 50F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.LightCoral;
-            this.label1.Location = new System.Drawing.Point(-204, 9);
+            this.label1.Location = new System.Drawing.Point(42, 31);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(737, 76);
+            this.label1.Size = new System.Drawing.Size(442, 46);
             this.label1.TabIndex = 7;
             this.label1.Text = "Pretty Woman Boutique";
             this.label1.Click += new System.EventHandler(this.label1_Click);
@@ -294,7 +296,7 @@
             this.GridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.GridView1.Location = new System.Drawing.Point(322, 184);
             this.GridView1.Name = "GridView1";
-            this.GridView1.Size = new System.Drawing.Size(468, 238);
+            this.GridView1.Size = new System.Drawing.Size(482, 238);
             this.GridView1.TabIndex = 27;
             this.GridView1.Visible = false;
             this.GridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridView1_CellContentClick);
@@ -377,12 +379,43 @@
             this.bEditar.Visible = false;
             this.bEditar.Click += new System.EventHandler(this.bEditar_Click);
             // 
+            // ListDesplegable1
+            // 
+            this.ListDesplegable1.FormattingEnabled = true;
+            this.ListDesplegable1.Items.AddRange(new object[] {
+            "Pieza",
+            "Caja"});
+            this.ListDesplegable1.Location = new System.Drawing.Point(158, 257);
+            this.ListDesplegable1.Name = "ListDesplegable1";
+            this.ListDesplegable1.Size = new System.Drawing.Size(121, 21);
+            this.ListDesplegable1.TabIndex = 35;
+            this.ListDesplegable1.Visible = false;
+            // 
+            // ListDesplegable2
+            // 
+            this.ListDesplegable2.FormattingEnabled = true;
+            this.ListDesplegable2.Items.AddRange(new object[] {
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL",
+            "2XL",
+            "3XL"});
+            this.ListDesplegable2.Location = new System.Drawing.Point(158, 318);
+            this.ListDesplegable2.Name = "ListDesplegable2";
+            this.ListDesplegable2.Size = new System.Drawing.Size(121, 21);
+            this.ListDesplegable2.TabIndex = 36;
+            this.ListDesplegable2.Visible = false;
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(241)))), ((int)(((byte)(193)))));
             this.ClientSize = new System.Drawing.Size(849, 492);
+            this.Controls.Add(this.ListDesplegable2);
+            this.Controls.Add(this.ListDesplegable1);
             this.Controls.Add(this.bEditar);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.tbx7);
@@ -452,6 +485,8 @@
         private System.Windows.Forms.Label lb7;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button bEditar;
+        private System.Windows.Forms.ComboBox ListDesplegable1;
+        private System.Windows.Forms.ComboBox ListDesplegable2;
     }
 }
 
