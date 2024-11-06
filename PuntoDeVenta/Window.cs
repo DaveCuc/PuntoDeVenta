@@ -16,10 +16,8 @@ namespace PuntoDeVenta
 {
     public partial class Window : Form
     {
-
         SqlCommand comando = new SqlCommand();
         SqlDataAdapter adapter = new SqlDataAdapter();
-
         private void button1_Click(object sender, EventArgs e) //prueba de conexion
         {
             SqlConnection conn = new SqlConnection();
@@ -30,34 +28,13 @@ namespace PuntoDeVenta
 
             button1.Visible = false;
 
-            BProductos.Visible = true;
-            bClientes.Visible = true;
-            bVentas.Visible = true;
-            tbx8.Visible = true;
-            bBuscar.Visible = true;
-            bRegistrar.Visible = true;
-            bMostrar.Visible = true;
-            bBorrar.Visible = true;
-            bEditar.Visible = true;
-            GridView1.Visible = true;
-
-
-
-
-
-
-
-
+            mostrarTodo();
         }
-
-
         private string seccionActiva = "";
-
         public Window()
         {
             InitializeComponent();
         }
-
         private void button2_Click(object sender, EventArgs e) //menu Clientes
         {
             seccionActiva = "Clientes";;
@@ -133,9 +110,11 @@ namespace PuntoDeVenta
 
             tbx1 .Visible = Enabled;
             tbx2.Visible = Enabled;
-            tbx3 .Visible = Enabled;
+            //tbx3 .Visible = Enabled;
+            ListDesplegable1.Visible = Enabled;
             tbx4.Visible = Enabled;
-            tbx5.Visible = Enabled;
+            //tbx5.Visible = Enabled;
+            ListDesplegable2.Visible = Enabled;
             tbx6.Visible = Enabled;
             tbx7 .Visible = Enabled;
 
@@ -144,7 +123,6 @@ namespace PuntoDeVenta
             GridView1.DataSource = null;
 
         }
-
         private void button3_Click(object sender, EventArgs e) //menu ventas
         {
             seccionActiva = "Ventas";
@@ -182,7 +160,6 @@ namespace PuntoDeVenta
 
             GridView1.DataSource = null;
         }
-
         private void button4_Click(object sender, EventArgs e) // Botón para registrar
         {
             if (seccionActiva == "Clientes")
@@ -202,7 +179,6 @@ namespace PuntoDeVenta
                 MessageBox.Show("Por favor, selecciona una sección válida antes de registrar.");
             }
         }
-   
         private void bBorrar_Click(object sender, EventArgs e) //boton para borrar dato
         {
             if (seccionActiva == "Clientes")
@@ -224,7 +200,6 @@ namespace PuntoDeVenta
 
 
         }
-
         private void bMostrar_Click(object sender, EventArgs e) // Boton para Mostrar Tabla datos
         {
             if (seccionActiva == "Clientes")
@@ -244,7 +219,6 @@ namespace PuntoDeVenta
                 MessageBox.Show("Por favor, selecciona una sección válida antes de Buscar.");
             }
         } 
-
         private void bBuscar_Click(object sender, EventArgs e) // Boton para buscar
         {
             if (seccionActiva == "Clientes")
@@ -264,7 +238,6 @@ namespace PuntoDeVenta
                 MessageBox.Show("Por favor, selecciona una sección válida antes de Buscar.");
             }
         }
-
         private void bEditar_Click(object sender, EventArgs e) //boton para editar clientes
         {
             if (seccionActiva == "Clientes")
@@ -283,9 +256,7 @@ namespace PuntoDeVenta
             {
                 MessageBox.Show("Por favor, selecciona una sección válida antes de Buscar.");
             }
-        }
-
-        
+        }   
 
         //funciones para registrar
         private void RegistrarCliente() //registrar cliente
@@ -337,7 +308,6 @@ namespace PuntoDeVenta
         private void RegistrarVenta() //registrar venta
         {
         }
-
         private void RegistrarProducto() //registrar producto
         {
             if (
@@ -451,12 +421,10 @@ namespace PuntoDeVenta
                 MessageBox.Show("Error al buscar el cliente: " + ex.Message);
             }
         }
-
         private void BuscarVenta() //buscar venta
         {
             
         }
-
         private void BuscarProducto()  //buscar producto
         {
             Vacio();
@@ -524,8 +492,7 @@ namespace PuntoDeVenta
         }
 
         //funciones para eliminar
-
-        private void EliminarCliente()
+        private void EliminarCliente() // eliminar cliente
         {
             DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar este cliente?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
@@ -568,19 +535,18 @@ namespace PuntoDeVenta
             }
 
         }
-
-        private void EliminarVenta()
+        private void EliminarVenta() // eliminar venta
         {
             throw new NotImplementedException();
         }
-
-        private void EliminarProducto()
+        private void EliminarProducto() // eliminarproducto
         {
             throw new NotImplementedException();
         }
+        
         // funciones editar
 
-        private void EditarCliente()
+        private void EditarCliente() // editar cliente
         {
             DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas editar este cliente?", "Confirmar edición", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
@@ -629,20 +595,16 @@ namespace PuntoDeVenta
                 MessageBox.Show("Edición cancelada.");
             }
         }
-
-        private void EditarVenta()
+        private void EditarVenta() //editar venta
         {
             throw new NotImplementedException();
         }
-
-        private void EditarProducto()
+        private void EditarProducto() // editar venta
         {
             throw new NotImplementedException();
         }
-
 
         //funciones
-
         private void LimpiarCampos(TextBox[] textboxes) //funcion para limpiar textbox
         {
             foreach (var textbox in textboxes)
@@ -650,8 +612,7 @@ namespace PuntoDeVenta
                 textbox.Text = string.Empty;
             }
         }
-
-        private void Vacio()
+        private void Vacio() //es para saber si no esta vacio el id text box
         {
             if (string.IsNullOrWhiteSpace(tbx8.Text))
             {
@@ -660,7 +621,7 @@ namespace PuntoDeVenta
             }
         }
         //funciones para mostrar
-        private void MostrarCliente()
+        private void MostrarCliente() // mostrar cliente
         {
             try
             {
@@ -679,11 +640,11 @@ namespace PuntoDeVenta
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
-        private void MostrarVenta()
+        private void MostrarVenta() //mostrar venta
         {
             throw new NotImplementedException();
         }
-        private void MostrarProducto()
+        private void MostrarProducto() // mostrar producto
         {
             try
             {
@@ -702,8 +663,37 @@ namespace PuntoDeVenta
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+        private void mostrarTodo() //mostrar todos los labels y text box al iniciar
+        {
 
-        
+            button1.Visible = false;
+            BProductos.Visible = true;
+            bClientes.Visible = true;
+            bVentas.Visible = true;
+            tbx8.Visible = true;
+            bBuscar.Visible = true;
+            bRegistrar.Visible = true;
+            bMostrar.Visible = true;
+            bBorrar.Visible = true;
+            bEditar.Visible = true;
+            GridView1.Visible = true;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
