@@ -1,31 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Data.SqlClient;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Windows.Forms;
 using TextBox = System.Windows.Forms.TextBox;
+using MySql.Data.MySqlClient;
+
 
 namespace PuntoDeVenta
 {
     public partial class Window : Form
     {
 
-        SqlCommand comando = new SqlCommand();
-        SqlDataAdapter adapter = new SqlDataAdapter();
+        MySqlCommand comando = new MySqlCommand();
+        MySqlDataAdapter adapter = new MySqlDataAdapter();
 
         private void button1_Click(object sender, EventArgs e) //prueba de conexion
         {
-            SqlConnection conn = new SqlConnection();
+            MySqlConnection conn = new MySqlConnection();
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
-
             conn.Open();
+
             MessageBox.Show("Base de Datos conectada");
 
             button1.Visible = false;
@@ -303,10 +298,10 @@ namespace PuntoDeVenta
 
             try
             {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
+                using (MySqlConnection conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
                 {
                     conn.Open();
-                    SqlCommand comando = new SqlCommand("INSERT INTO Clientes (RFC, Nombre, Dirección, Teléfono, No_Cuenta) VALUES (@RFC, @Nombre, @Direccion, @Telefono, @NoCuenta)", conn);
+                    MySqlCommand comando = new MySqlCommand("INSERT INTO Clientes (RFC, Nombre, Dirección, Teléfono, No_Cuenta) VALUES (@RFC, @Nombre, @Direccion, @Telefono, @NoCuenta)", conn);
                     comando.Parameters.AddWithValue("@RFC", tbx2.Text);
                     comando.Parameters.AddWithValue("@Nombre", tbx1.Text);
                     comando.Parameters.AddWithValue("@Direccion", tbx3.Text);
@@ -355,10 +350,10 @@ namespace PuntoDeVenta
 
             try
             {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
+                using (MySqlConnection conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
                 {
                     conn.Open();
-                    SqlCommand comando = new SqlCommand("INSERT INTO Productos (Articulo, Descripcion, Unidad, Modelo, Talla, Color, Precio) VALUES (@Articulo, @Descripcion, @Unidad, @Modelo, @Talla,@Color,@Precio)", conn);
+                    MySqlCommand comando = new MySqlCommand("INSERT INTO Productos (Articulo, Descripcion, Unidad, Modelo, Talla, Color, Precio) VALUES (@Articulo, @Descripcion, @Unidad, @Modelo, @Talla,@Color,@Precio)", conn);
                     comando.Parameters.AddWithValue("@Articulo", tbx1.Text);
                     comando.Parameters.AddWithValue("@Descripcion", tbx2.Text);
                     comando.Parameters.AddWithValue("@Unidad", tbx3.Text);
@@ -397,13 +392,13 @@ namespace PuntoDeVenta
 
             try
             {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
+                using (MySqlConnection conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
                 {
                     conn.Open();
-                    SqlCommand comando = new SqlCommand("SELECT RFC, Nombre, Dirección, Teléfono, No_Cuenta FROM Clientes WHERE IdCliente = @IdCliente", conn);
+                    MySqlCommand comando = new MySqlCommand("SELECT RFC, Nombre, Direccion, Telefono, No_Cuenta FROM Clientes WHERE IdCliente = @IdCliente", conn);
                     comando.Parameters.AddWithValue("@IdCliente", tbx8.Text);
 
-                    using (SqlDataReader reader = comando.ExecuteReader())
+                    using (MySqlDataReader reader = comando.ExecuteReader())
                     {
                         if (reader.Read())
                         {
@@ -463,13 +458,13 @@ namespace PuntoDeVenta
 
             try
             {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
+                using (MySqlConnection conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
                 {
                     conn.Open();
-                    SqlCommand comando = new SqlCommand("SELECT Articulo, Descripcion, Unidad, Modelo, Talla, Color, Precio FROM Productos WHERE idProducto = @idProducto", conn);
+                    MySqlCommand comando = new MySqlCommand("SELECT Articulo, Descripcion, Unidad, Modelo, Talla, Color, Precio FROM Productos WHERE idProducto = @idProducto", conn);
                     comando.Parameters.AddWithValue("@idProducto", tbx8.Text);
 
-                    using (SqlDataReader reader = comando.ExecuteReader())
+                    using (MySqlDataReader reader = comando.ExecuteReader())
                     {
                         if (reader.Read())
                         {
@@ -534,10 +529,10 @@ namespace PuntoDeVenta
             {
                 try
                 {
-                    using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
+                    using (MySqlConnection conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
                     {
                         conn.Open();
-                        SqlCommand comando = new SqlCommand("DELETE FROM Clientes WHERE IdCliente = @IdCliente", conn);
+                        MySqlCommand comando = new MySqlCommand("DELETE FROM Clientes WHERE IdCliente = @IdCliente", conn);
                         comando.Parameters.AddWithValue("@IdCliente", tbx8.Text);  // El ID que quieres eliminar
 
                         int filasAfectadas = comando.ExecuteNonQuery();
@@ -589,10 +584,10 @@ namespace PuntoDeVenta
             {
                 try
                 {
-                    using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
+                    using (MySqlConnection conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString()))
                     {
                         conn.Open();
-                        SqlCommand comando = new SqlCommand("UPDATE Clientes SET RFC = @RFC, Nombre = @Nombre, Dirección = @Dirección, Teléfono = @Teléfono, No_Cuenta = @No_Cuenta WHERE IdCliente = @IdCliente", conn);
+                        MySqlCommand comando = new MySqlCommand("UPDATE Clientes SET RFC = @RFC, Nombre = @Nombre, Dirección = @Dirección, Teléfono = @Teléfono, No_Cuenta = @No_Cuenta WHERE IdCliente = @IdCliente", conn);
 
                         // Asignar los valores de los TextBox a los parámetros de la consulta SQL
                         comando.Parameters.AddWithValue("@RFC", tbx2.Text);
@@ -664,11 +659,11 @@ namespace PuntoDeVenta
         {
             try
             {
-                SqlConnection conn = new SqlConnection();
+                MySqlConnection conn = new MySqlConnection();
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
                 DataSet ds = new DataSet("Clientes");
-                SqlCommand comando = new SqlCommand("SELECT * FROM Clientes", conn);
-                SqlDataAdapter adapter = new SqlDataAdapter(comando);
+                MySqlCommand comando = new MySqlCommand("SELECT * FROM Clientes", conn);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(comando);
                 conn.Open();
                 adapter.Fill(ds);
                 conn.Close();
@@ -687,11 +682,11 @@ namespace PuntoDeVenta
         {
             try
             {
-                SqlConnection conn = new SqlConnection();
+                MySqlConnection conn = new MySqlConnection();
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
                 DataSet ds = new DataSet("Productos");
-                SqlCommand comando = new SqlCommand("SELECT * FROM Productos", conn);
-                SqlDataAdapter adapter = new SqlDataAdapter(comando);
+                MySqlCommand comando = new MySqlCommand("SELECT * FROM Productos", conn);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(comando);
                 conn.Open();
                 adapter.Fill(ds);
                 conn.Close();
